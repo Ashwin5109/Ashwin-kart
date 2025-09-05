@@ -3,36 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AshwinKart</title>
-<link rel="stylesheet" href="style.css">
-<script src="script.js" defer></script>
+<title>Ashwinkart - Home</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<header>
-    <h1>AshwinKart</h1>
-    <p>Best Deals, Just For You!</p>
+<body class="bg-gray-100">
+
+<header class="bg-blue-600 text-white p-6 text-center">
+    <h1 class="text-3xl font-bold">Ashwinkart</h1>
 </header>
-<nav>
-    <a href="index.html">Home</a>
-    <a href="cart.html">Cart</a>
-    <a href="#">Account</a>
+
+<nav class="bg-gray-800 text-white flex justify-center space-x-6 py-3">
+    <a href="index.html" class="hover:bg-gray-700 px-3 py-1 rounded">Home</a>
+    <a href="cart.html" class="hover:bg-gray-700 px-3 py-1 rounded">Cart</a>
+    <a href="login.html" class="hover:bg-gray-700 px-3 py-1 rounded">Login/Signup</a>
 </nav>
-<section class="products">
-    <div class="product">
-        <a href="product.html?name=Product%201&price=499&img=https://via.placeholder.com/150"><img src="https://via.placeholder.com/150" alt="Product 1"></a>
-        <h3>Product 1</h3>
-        <p>₹499</p>
-        <button onclick="addToCart({name:'Product 1', price:499, img:'https://via.placeholder.com/150'})">Add to Cart</button>
-    </div>
-    <div class="product">
-        <a href="product.html?name=Product%202&price=999&img=https://via.placeholder.com/150"><img src="https://via.placeholder.com/150" alt="Product 2"></a>
-        <h3>Product 2</h3>
-        <p>₹999</p>
-        <button onclick="addToCart({name:'Product 2', price:999, img:'https://via.placeholder.com/150'})">Add to Cart</button>
-    </div>
-</section>
-<footer>
-    &copy; 2025 AshwinKart. All rights reserved.
-</footer>
+
+<div class="flex flex-col md:flex-row justify-center items-center gap-4 p-4">
+    <input type="text" id="searchInput" placeholder="Search products..." 
+           class="p-2 border rounded w-64" oninput="filterProducts()">
+    <select id="categorySelect" class="p-2 border rounded" onchange="filterProducts()"></select>
+    <select id="priceSelect" class="p-2 border rounded" onchange="filterProducts()">
+        <option value="All">All Prices</option>
+        <option value="0-20">$0-$20</option>
+        <option value="21-40">$21-$40</option>
+        <option value="41-100">$41-$100</option>
+        <option value="101-1000">$101+</option>
+    </select>
+</div>
+
+<div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4" id="products"></div>
+
+<script>
+// Products
+const products = [
+    {id:1, name:"Smartphone", price:150, category:"Electronics", image:"https://via.placeholder.com/200", description:"High-quality smartphone."},
+    {id:2, name:"Laptop", price:500, category:"Electronics", image:"https://via.placeholder.com/200", description:"Powerful laptop."},
+    {id:3, name:"T-Shirt", price:20, category:"Clothing", image:"https://via.placeholder.com/200", description:"Comfortable cotton t-shirt."},
+    {id:4, name:"Jeans", price:35, category:"Clothing", image:"https://via.placeholder.com/200", description:"Stylish denim jeans."},
+    {id:5, name:"Coffee Maker", price:40, category:"Home", image:"https://via.placeholder.com/200", description:"Brew coffee easily."},
+    {id:6, name:"Vacuum Cleaner", price:80, category:"Home", image:"https://via.placeholder.com/200", description:"Keep home clean."}
+];
+
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// Populate categories
+const categories = ["All", ...new Set(products.map(p=>p.category))];
+const categorySelect = document.getElementById("categorySelect");
+categories.forEach(cat=>{
+    const option = document.createElement("option");
+    option.value = cat;
+    option.text = cat;
+    categorySelect.appendChild(option);
+});
+
+// Display products
+function displayProducts(items){
+    const container = document.getElementById("products");
+    container.innerHTML = '';
+    if(items.length===0){container.innerHTML="<p class='col-span-full text-center'>No products found.</p>"; return;}
+    items.forEach(p=>{
+        const div = document.createElement("div");
+        div.className="bg-white border rounded-lg shadow p-4 flex flex-col items-center";
+        div.innerHTML=`
+            <img src="${p.image}" alt="${p.name}" class="mb-2 rounded cursor-pointer" onclick="showDetail(${p.id})">
+            <h3 class="font-semibold text-lg">${p.name}</h3>
+            <p class="text-blue-600 font-bold">$${p.price}</p>
+            <button class="bg-blue-600 text-white px-4 py-2 mt-2 rounded hover:bg-blue-700"
+                    onclick="addToCart(${p.id})">Add to Cart</button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Filter
+function filterProducts(){
+    const search=document.getElementById("searchInput").value.toLowerCase();
+    const category=document.getElementById("categorySelect").value;
+    const priceRange=document.getElementById("priceSelect").value;
+    let filtered=products.filter(p=>p.name.toLowerCase().includes(search));
+    if(category!=="All") filtered=filtered.filter(p=>p.category===category);
+    if(priceRange!=="All"){
+        const [min,max]=priceRange.split("-").map(Number);
+        filtered=filtered.filter(p=>p.price>=min && p.price<=(max||Infinity));
+    }
+    displayProducts(filtered);
+}
+
+// Cart functions
+function addToCart(id){
+    const product=products.find(p=>p.id===id);
+    cart.push(product);
+    localStorage.setItem('cart',JSON.stringify(cart));
+    alert("Added to cart!");
+}
+
+function showDetail(id){
+    localStorage.setItem('detailId',id);
+    window.location.href="product.html";
+}
+
+// Initial load
+displayProducts(products);
+</script>
+
 </body>
 </html>
