@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AshwinKart</title>
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+<header>
+    <h1>AshwinKart</h1>
+    <p>Best Deals, Just For You!</p>
+</header>
+<nav>
+    <a href="index.html">Home</a>
+    <a href="cart.html">Cart</a>
+    <a href="#">Account</a>
+</nav>
+<section class="products">
+    <div class="product">
+        <a href="product.html?name=Product%201&price=499&img=https://via.placeholder.com/150"><img src="https://via.placeholder.com/150" alt="Product 1"></a>
+        <h3>Product 1</h3>
+        <p>₹499</p>
+        <button onclick="addToCart({name:'Product 1', price:499, img:'https://via.placeholder.com/150'})">Add to Cart</button>
+    </div>
+    <div class="product">
+        <a href="product.html?name=Product%202&price=999&img=https://via.placeholder.com/150"><img src="https://via.placeholder.com/150" alt="Product 2"></a>
+        <h3>Product 2</h3>
+        <p>₹999</p>
+        <button onclick="addToCart({name:'Product 2', price:999, img:'https://via.placeholder.com/150'})">Add to Cart</button>
+    </div>
+</section>
+<footer>
+    &copy; 2025 AshwinKart. All rights reserved.
+</footer>
+</body>
+</html>
