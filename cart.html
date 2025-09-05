@@ -3,27 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cart - AshwinKart</title>
-<link rel="stylesheet" href="style.css">
-<script src="script.js" defer></script>
+<title>Ashwinkart - Cart</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body onload="loadCart()">
-<header>
-    <h1>AshwinKart</h1>
+<body class="bg-gray-100">
+
+<header class="bg-blue-600 text-white p-6 text-center">
+    <h1 class="text-3xl font-bold">Ashwinkart</h1>
 </header>
-<nav>
-    <a href="index.html">Home</a>
-    <a href="cart.html">Cart</a>
-    <a href="#">Account</a>
+
+<nav class="bg-gray-800 text-white flex justify-center space-x-6 py-3">
+    <a href="index.html" class="hover:bg-gray-700 px-3 py-1 rounded">Home</a>
+    <a href="cart.html" class="hover:bg-gray-700 px-3 py-1 rounded">Cart</a>
+    <a href="login.html" class="hover:bg-gray-700 px-3 py-1 rounded">Login/Signup</a>
 </nav>
-<section style="padding:20px; background-color:white; margin:20px; border-radius:8px;">
-    <h2>Your Cart</h2>
-    <div id="cart-items"></div>
-    <h3 id="total-price" style="margin-top:20px;"></h3>
-    <button onclick="alert('Checkout coming soon!')">Checkout</button>
-</section>
-<footer>
-    &copy; 2025 AshwinKart. All rights reserved.
-</footer>
+
+<div class="p-4">
+    <h2 class="text-2xl font-bold mb-4">Shopping Cart</h2>
+    <ul id="cartItems" class="mb-4"></ul>
+    <p class="font-semibold mb-4">Total: $<span id="total">0</span></p>
+    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onclick="checkout()">Checkout</button>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+const cartItems = document.getElementById("cartItems");
+const totalEl = document.getElementById("total");
+
+function renderCart(){
+    cartItems.innerHTML='';
+    if(cart.length===0){cartItems.innerHTML="<li>Your cart is empty</li>"; totalEl.innerText=0; return;}
+    cart.forEach((item,index)=>{
+        const li=document.createElement("li");
+        li.className="flex justify-between mb-1";
+        li.innerHTML=`${item.name} - $${item.price} <button class="text-red-600" onclick="remove(${index})">X</button>`;
+        cartItems.appendChild(li);
+    });
+    totalEl.innerText=cart.reduce((sum,item)=>sum+item.price,0);
+}
+
+function remove(index){
+    cart.splice(index,1);
+    localStorage.setItem('cart',JSON.stringify(cart));
+    renderCart();
+}
+
+function checkout(){
+    if(cart.length===0){alert("Cart empty!"); return;}
+    alert(`Thank you! Total: $${cart.reduce((sum,item)=>sum+item.price,0)}`);
+    cart=[];
+    localStorage.setItem('cart',JSON.stringify(cart));
+    renderCart();
+}
+
+renderCart();
+</script>
+
 </body>
-</html>
+</
