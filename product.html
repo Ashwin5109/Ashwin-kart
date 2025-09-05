@@ -3,27 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Product - AshwinKart</title>
-<link rel="stylesheet" href="style.css">
-<script src="script.js" defer></script>
+<title>Ashwinkart - Product Detail</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body onload="loadProduct()">
-<header>
-    <h1>AshwinKart</h1>
+<body class="bg-gray-100">
+
+<header class="bg-blue-600 text-white p-6 text-center">
+    <h1 class="text-3xl font-bold">Ashwinkart</h1>
 </header>
-<nav>
-    <a href="index.html">Home</a>
-    <a href="cart.html">Cart</a>
-    <a href="#">Account</a>
+
+<nav class="bg-gray-800 text-white flex justify-center space-x-6 py-3">
+    <a href="index.html" class="hover:bg-gray-700 px-3 py-1 rounded">Home</a>
+    <a href="cart.html" class="hover:bg-gray-700 px-3 py-1 rounded">Cart</a>
+    <a href="login.html" class="hover:bg-gray-700 px-3 py-1 rounded">Login/Signup</a>
 </nav>
-<section style="padding:20px; background-color:white; margin:20px; border-radius:8px;">
-    <img id="product-img" src="" alt="Product" style="width:100%; border-radius:8px;">
-    <h2 id="product-name"></h2>
-    <p id="product-price"></p>
-    <button id="add-btn">Add to Cart</button>
-</section>
-<footer>
-    &copy; 2025 AshwinKart. All rights reserved.
-</footer>
+
+<div class="p-4">
+    <button class="bg-blue-600 text-white px-3 py-1 rounded mb-4" onclick="window.location.href='index.html'">Back to Home</button>
+    <div id="productDetail" class="bg-white border rounded-lg shadow p-4 flex flex-col md:flex-row items-center gap-4"></div>
+</div>
+
+<script>
+const products = [
+    {id:1, name:"Smartphone", price:150, category:"Electronics", image:"https://via.placeholder.com/200", description:"High-quality smartphone."},
+    {id:2, name:"Laptop", price:500, category:"Electronics", image:"https://via.placeholder.com/200", description:"Powerful laptop."},
+    {id:3, name:"T-Shirt", price:20, category:"Clothing", image:"https://via.placeholder.com/200", description:"Comfortable cotton t-shirt."},
+    {id:4, name:"Jeans", price:35, category:"Clothing", image:"https://via.placeholder.com/200", description:"Stylish denim jeans."},
+    {id:5, name:"Coffee Maker", price:40, category:"Home", image:"https://via.placeholder.com/200", description:"Brew coffee easily."},
+    {id:6, name:"Vacuum Cleaner", price:80, category:"Home", image:"https://via.placeholder.com/200", description:"Keep home clean."}
+];
+
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+const id = parseInt(localStorage.getItem('detailId'));
+const product = products.find(p=>p.id===id);
+
+const container = document.getElementById("productDetail");
+container.innerHTML=`
+    <img src="${product.image}" class="w-64 rounded mb-4 md:mb-0">
+    <div class="md:ml-6">
+        <h2 class="text-2xl font-bold mb-2">${product.name}</h2>
+        <p class="text-blue-600 font-bold mb-2">$${product.price}</p>
+        <p class="mb-4">${product.description}</p>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onclick="addToCart()">Add to Cart</button>
+    </div>
+`;
+
+function addToCart(){
+    cart.push(product);
+    localStorage.setItem('cart',JSON.stringify(cart));
+    alert("Added to cart!");
+}
+</script>
+
 </body>
 </html>
